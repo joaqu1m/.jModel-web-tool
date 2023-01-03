@@ -1,0 +1,73 @@
+#informacoes {
+    width: 75vh;
+    height: calc(25vh - 4px);
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+#infTitulo {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#infBoxes {
+    width: 100%;
+    height: 75%;
+    display: flex;
+}
+
+.infMetricas {
+    width: 33.3%;
+    height: 100%;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.grdCaixaHorizontal {
+    width: calc(100vw - 75vh - 4px);
+    height: calc(25vh - 2px);
+    border: 1px solid black;
+    display: flex;
+}
+
+.grdCaixaHorizontalScrollbar {
+    overflow-x: scroll;
+}
+
+.grdCaixaHorizontalScrollbar::-webkit-scrollbar {
+    height: 3vh;
+    background-color: rgb(184, 184, 184);
+}
+
+.grdCaixaHorizontalScrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(226, 226, 226);
+    border-radius: 20px;
+    border-top: 0.4vh solid rgb(184, 184, 184);
+    border-bottom: 0.4vh solid rgb(184, 184, 184);
+}
+
+.grdCaixaHorizontalScrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(241, 241, 241);
+}
+
+.grdMiniCaixas {
+    width: calc(22vh - 3.5px);
+    height: calc(22vh - 3.5px);
+    min-width: calc(22vh - 3.5px);
+    min-height: calc(20vh - 2px);
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    text-align: center;
+}

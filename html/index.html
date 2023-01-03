@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joca's Web Modeling Tool</title>
+    <link rel="icon" href="./../icon.png">
+    <link rel="stylesheet" href="./../css/global.css">
+    <link rel="stylesheet" href="./../css/modelo.css">
+    <link rel="stylesheet" href="./../css/gui.css">
+</head>
+<body>
+    <div class="grade">
+        <div>
+            <div id="visualizacao">
+                <div id="visPelicula" class="selOff">
+                    <button class="selOff" onclick="redefinirCamera()">Redefinir câmera</button>
+                    <button class="selOff" onclick="zoomCamera(true)">Zoom+</button>
+                    <button class="selOff" onclick="zoomCamera(false)">Zoom-</button>
+                </div>
+                <div id="visGrupos">
+                    <div id="grupo1" class="grupo"></div>
+                    <div id="grupo2" class="grupo"></div>
+                </div>
+            </div>
+            <div id="informacoes">
+                <div id="infTitulo"></div>
+                <div id="infBoxes"></div>
+            </div>
+        </div>
+        <div>
+            <div id="cameraLista" class="grdCaixaHorizontal">
+                informações gerais e utilidades, infos da câmera e itens selecionados atualmente
+            </div>
+            <div id="grdEditarMeshes" class="grdCaixaHorizontal"></div>
+            <div id="gruposLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
+            <div id="meshesLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../js/configs.js"></script>
+<script type="text/javascript" src="./../js/camera.js"></script>
+<script type="text/javascript" src="./../js/gui.js"></script>
+<script type="text/javascript" src="./../js/utilities.js"></script>
+<script type="text/javascript" src="./../js/manipularModelos.js"></script>
+<script>
+    /*
+    ================================
+    Definindo eventListeners padrões
+    ================================
+    */
+
+    // Câmera
+    visPelicula.onpointerdown = function() {
+        cameraConfigs.eventoEmUso = true
+        visPelicula.addEventListener("mousemove", mouseMovendo)
+    }
+    visPelicula.onmouseout = function() {
+        visPelicula.removeEventListener("mousemove", mouseMovendo)
+        cameraConfigs.eventoEmUso = false
+        redefinirPegarPrimeirasCoords()
+    }
+    visPelicula.oncontextmenu = function() {
+        visPelicula.removeEventListener("mousemove", mouseMovendo)
+        cameraConfigs.eventoEmUso = false
+        redefinirPegarPrimeirasCoords()
+    }
+    visPelicula.onpointerup = function() {
+        visPelicula.removeEventListener("mousemove", mouseMovendo)
+        cameraConfigs.eventoEmUso = false
+        redefinirPegarPrimeirasCoords()
+    }
+    visPelicula.ondragstart = () => {
+        return false
+    }
+
+    /*
+    ===========================
+    Iniciando primeiras funções
+    ===========================
+    */
+
+    // Câmera
+    redefinirCamera()
+
+    // GUI
+    atualizarListaGrupos()
+    atualizarInfos()
+</script>
