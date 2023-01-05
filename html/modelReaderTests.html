@@ -1,0 +1,25 @@
+<input type="file" id="input" multiple>
+<script>
+    input.onchange = function(e) {
+        // O input permite a adição de mais de um arquivo, então ele sempre virá dentro de um array.
+        const fileList = this.files
+        lerArquivo(fileList[0])
+    }
+
+    // Terei de instanciar um novo reader se quiser ler dois arquivos diferentes ao mesmo tempo ou
+    // ler o mesmo arquivo em modos diferentes (como "readAsText" ou "readAsDataURL")
+    const leitor1 = new FileReader()
+    leitor1.addEventListener('load', (event) => {
+        // Após a leitura do Reader temos outros dados para uso, como "Loaded" e "Total" (para checar
+        // se o arquivo foi carregado totalmente no JS), e target.result que mostra o conteúdo do arquivo
+        console.log(event.target.result)
+    })
+    // Sempre ao criar um reader é necessário atribuir um event listener de load, que é a saída das funções
+    // .readAs usadas no reader
+
+    function lerArquivo(file) {
+        // Os itens name, lastModified, lastModifiedDate, size e type devem ser capturados antes da leitura do Reader
+        console.log(file.name)
+        leitor1.readAsText(file)
+    }
+</script>

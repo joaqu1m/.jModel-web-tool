@@ -10,7 +10,8 @@ let meshConfigs = {
     grupos: [],
     meshes: [],
     grupoSelecionado: "",
-    meshSelecionada: ""
+    meshSelecionada: "",
+    mostrarAjudas: true
 }
 
 // Itens prontos caso testes sejam necessários

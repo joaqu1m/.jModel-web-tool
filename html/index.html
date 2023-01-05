@@ -19,10 +19,7 @@
                     <button class="selOff" onclick="zoomCamera(true)">Zoom+</button>
                     <button class="selOff" onclick="zoomCamera(false)">Zoom-</button>
                 </div>
-                <div id="visGrupos">
-                    <div id="grupo1" class="grupo"></div>
-                    <div id="grupo2" class="grupo"></div>
-                </div>
+                <div id="visGrupos"></div>
             </div>
             <div id="informacoes">
                 <div id="infTitulo"></div>
@@ -31,7 +28,8 @@
         </div>
         <div>
             <div id="cameraLista" class="grdCaixaHorizontal">
-                informações gerais e utilidades, infos da câmera e itens selecionados atualmente
+                informações gerais e utilidades, infos da câmera e itens selecionados atualmente <br>
+                <button onclick="recarregarMedidas()">recarregarMedidas</button>
             </div>
             <div id="grdEditarMeshes" class="grdCaixaHorizontal"></div>
             <div id="gruposLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
@@ -46,6 +44,9 @@
 <script type="text/javascript" src="./../js/utilities.js"></script>
 <script type="text/javascript" src="./../js/manipularModelos.js"></script>
 <script>
+    // ideias atuais
+    // ter como escolher formas da geometria espacial ou vazio ao criar grupos (formas ja vem compostas por planos)
+    // e ao criar planos ter como escolher também formas da geometria plana, apenas texto, apenas borda, tambem varios elementos do css como metrica
     /*
     ================================
     Definindo eventListeners padrões

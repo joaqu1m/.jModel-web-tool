@@ -30,7 +30,28 @@
     transform-style: preserve-3d;
     position: absolute;
 }
-.face {
+.grupoAjuda {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grupoAjuda div {
+    width: 10%;
+    height: 10%;
+    background-color: orange;
+    border-radius: 100%;
+    position: absolute;
+}
+.grupoPlanos {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: absolute;
+}
+.absoluto {
     position: absolute;
 }
 .backfaceOn {
