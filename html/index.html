@@ -31,7 +31,7 @@
                 informações gerais e utilidades, infos da câmera e itens selecionados atualmente <br>
                 <button onclick="recarregarMedidas()">recarregarMedidas</button>
             </div>
-            <div id="grdEditarMeshes" class="grdCaixaHorizontal"></div>
+            <div id="grdEditarMeshes" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
             <div id="gruposLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
             <div id="meshesLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
         </div>
@@ -88,5 +88,7 @@
 
     // GUI
     atualizarListaGrupos()
+    atualizarListaMeshes()
     atualizarInfos()
+    aparecerTelaEdicao()
 </script>

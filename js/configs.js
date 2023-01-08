@@ -11,6 +11,9 @@ let meshConfigs = {
     meshes: [],
     grupoSelecionado: "",
     meshSelecionada: "",
+    timeouts: {
+        exclusaoCod: 0
+    },
     mostrarAjudas: true
 }
 
@@ -48,9 +51,9 @@ meshConfigs.meshes.push({
     tX: 0,
     tY: 0,
     tZ: 50,
-    cor: "green",
+    cor: "#329a1d",
     grupoFk: 1,
-    tipo: "Face"
+    tipo: "Quadrado"
 })
 meshConfigs.meshes.push({
     id: 2,
@@ -63,9 +66,9 @@ meshConfigs.meshes.push({
     tX: 0,
     tY: 0,
     tZ: 50,
-    cor: "pink",
+    cor: "#ffb3b3",
     grupoFk: 1,
-    tipo: "Face"
+    tipo: "Quadrado"
 })
 meshConfigs.meshes.push({
     id: 3,
@@ -78,7 +81,7 @@ meshConfigs.meshes.push({
     tX: 0,
     tY: 0,
     tZ: 50,
-    cor: "blue",
+    cor: "#1532c1",
     grupoFk: 2,
-    tipo: "Face"
+    tipo: "Quadrado"
 })
