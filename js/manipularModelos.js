@@ -26,8 +26,8 @@ function recarregarMedidas() {
         window[`grupoPlanos${g.id}`].style.transform = `rotateX(${g.rX}deg) rotateY(${g.rY}deg) rotateZ(${g.rZ}deg)`
     }
     for (i = 0; i < meshConfigs.meshes.length; i++) {
-        let m = meshConfigs.meshes[i]
-        let mesh = window[`face${m.id}`].style
+        let m = meshConfigs.meshes[i],
+            mesh = window[`face${m.id}`].style
         mesh.width = `${m.width}%`
         mesh.height = `${m.height}%`
         mesh.transform = `rotateX(${m.rX}deg) rotateY(${m.rY}deg) rotateZ(${m.rZ}deg) translate3d(${porcentagem(m.tX)}px, ${porcentagem(m.tY)}px, ${porcentagem(m.tZ)}px)`
@@ -36,79 +36,50 @@ function recarregarMedidas() {
     atualizarInfos()
 }
 
-function criarPlano() {
-    grdEditarMeshes.innerHTML =
-    `
-    <div class="grdMiniCaixas grdMiniCaixasCriarR">
-        <div>
-            <input id="criarPlanonome" type="text" placeholder="Nome">
-        </div>
-        <div>
-            <input id="criarPlanowidth" type="text" placeholder="Width%">
-        </div>
-        <div>
-            <input id="criarPlanoheight" type="text" placeholder="Height%">
-        </div>
-        <div>
-            <input id="criarPlanocor" type="color" style="padding: 0; margin: 0; border: 0; background-color: transparent; width: 70%;" value="#bcffb8">
-        </div>
-    </div>
-    <div class="grdMiniCaixas grdMiniCaixasCriarR">
-        <div>
-            Rotação
-        </div>
-        <div>
-            <span>X: </span>
-            <input id="criarPlanorX" type="text">
-            <span>°</span>
-        </div>
-        <div>
-            <span>Y: </span>
-            <input id="criarPlanorY" type="text">
-            <span>°</span>
-        </div>
-        <div>
-            <span>Z: </span>
-            <input id="criarPlanorZ" type="text">
-            <span>°</span>
-        </div>
-    </div>
-    <div class="grdMiniCaixas grdMiniCaixasCriarR">
-        <div>
-            Translação
-        </div>
-        <div>
-            <span>X: </span>
-            <input id="criarPlanotX" type="text">
-            <span>%</span>
-        </div>
-        <div>
-            <span>Y: </span>
-            <input id="criarPlanotY" type="text">
-            <span>%</span>
-        </div>
-        <div>
-            <span>Z: </span>
-            <input id="criarPlanotZ" type="text">
-            <span>%</span>
-        </div>
-    </div>
-    <div class="grdMiniCaixas" onclick="realmenteCriarPlano()">Confirmar</div>
-    <div class="grdMiniCaixas" onclick="aparecerTelaEdicao()">Cancelar</div>
-    `
+function realmenteCriarGrupo() {
+    let i = 1,
+        achei = false,
+        novoId = 0
+    while (true) {
+        achei = false
+        for (f = 0; f < meshConfigs.grupos.length; f++) {
+            if (i == meshConfigs.grupos[f].id) {
+                achei = true
+            }
+        } 
+        if (!achei) {
+            novoId = i
+            break
+        }
+        i++
+    }
+    let valores = checarNumber([criarGruporX.value, criarGruporY.value, criarGruporZ.value, criarGrupotX.value, criarGrupotY.value, criarGrupotZ.value])
+    meshConfigs.grupos.push({
+        id: novoId,
+        nome: criarGruponome.value,
+        rX: valores[0],
+        rY: valores[1],
+        rZ: valores[2],
+        tX: valores[3],
+        tY: valores[4],
+        tZ: valores[5]
+    })
+    aparecerTelaEdicao()
+    recarregarMedidas()
+    atualizarListaGrupos()
+    selecionarGrupo(novoId)
 }
-
 function realmenteCriarPlano() {
-    let i = 1
-    let achei = false
-    let novoId = 0
+    let i = 1,
+        achei = false,
+        novoId = 0
     while (true) {
         achei = false
         for (f = 0; f < meshConfigs.meshes.length; f++) {
             if (i == meshConfigs.meshes[f].id) {
                 achei = true
             }
-        } 
+        }
         if (!achei) {
             novoId = i
             break
@@ -137,23 +108,49 @@ function realmenteCriarPlano() {
         aparecerTelaEdicao()
         recarregarMedidas()
         atualizarListaMeshes()
+        selecionarMesh(novoId)
     }
 }
 
+function definirValor(categoria, item, fonte) {
+    if (categoria == "grupos") {
+        for (i = 0; i < meshConfigs.grupos.length; i++) {
+            if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
+                meshConfigs[categoria][i][item] = fonte
+                break
+            }
+        }
+    } else {
+        for (i = 0; i < meshConfigs.meshes.length; i++) {
+            if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+                meshConfigs[categoria][i][item] = fonte
+                break
+            }
+        }
+    }
+    recarregarMedidas()
+    if (!(meshConfigs.grupoSelecionado == "na" || meshConfigs.grupoSelecionado == "")) {
+        atualizarListaGrupos()
+        window[`grdGruposBotao${meshConfigs.grupoSelecionado.id}`].style.border = "1px solid blue"
+        if (!(meshConfigs.meshSelecionada == "na" || meshConfigs.meshSelecionada == "")) {
+            atualizarListaMeshes()
+            window[`grdMeshesBotao${meshConfigs.meshSelecionada.id}`].style.border = "1px solid blue"
+        }
+    }
+}
 function editarMedidasGrupos(medida, v) {
     if (v == "") {
         for (i = 0; i < meshConfigs.grupos.length; i++) {
             if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
                 meshConfigs.grupos[i][`r${medida}`] = Math.round((window[`inputr${medida}`].value) * 100) / 100
-                window[`spanr${medida}`].innerHTML = `${medida}: ${Math.round((window[`inputr${medida}`].value) * 100) / 100}°`
+                window[`spanr${medida}`].innerHTML = `${medida}: ${meshConfigs.grupos[i][`r${medida}`]}°`
                 break
             }
         }
     } else {
         for (i = 0; i < meshConfigs.grupos.length; i++) {
             if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
-                let resultado = meshConfigs.grupos[i][`r${medida}`] + v
-                meshConfigs.grupos[i][`r${medida}`] = Math.round(definirFaixas(resultado, 0, 360) * 100) / 100
+                meshConfigs.grupos[i][`r${medida}`] = Math.round(definirFaixas(meshConfigs.grupos[i][`r${medida}`] + v, 0, 360) * 100) / 100
                 window[`spanr${medida}`].innerHTML = `${medida}: ${meshConfigs.grupos[i][`r${medida}`]}°`
                 window[`inputr${medida}`].value = meshConfigs.grupos[i][`r${medida}`]
                 break
@@ -162,7 +159,6 @@ function editarMedidasGrupos(medida, v) {
     }
     recarregarMedidas()
 }
-
 function editarTranslacaoGrupos(medida, v) {
     for (i = 0; i < meshConfigs.grupos.length; i++) {
         if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
@@ -174,14 +170,72 @@ function editarTranslacaoGrupos(medida, v) {
     recarregarMedidas()
 }
 
+function editarMedidasMeshes(medida, v) {
+    if (v == "") {
+        for (i = 0; i < meshConfigs.meshes.length; i++) {
+            if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+                meshConfigs.meshes[i][`r${medida}`] = Math.round((window[`inputr${medida}`].value) * 100) / 100
+                window[`spanr${medida}`].innerHTML = `${medida}: ${meshConfigs.meshes[i][`r${medida}`]}°`
+                break
+            }
+        }
+    } else {
+        for (i = 0; i < meshConfigs.meshes.length; i++) {
+            if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+                meshConfigs.meshes[i][`r${medida}`] = Math.round(definirFaixas(meshConfigs.meshes[i][`r${medida}`] + v, 0, 360) * 100) / 100
+                window[`spanr${medida}`].innerHTML = `${medida}: ${meshConfigs.meshes[i][`r${medida}`]}°`
+                window[`inputr${medida}`].value = meshConfigs.meshes[i][`r${medida}`]
+                break
+            }
+        }
+    }
+    recarregarMedidas()
+}
+function editarTranslacaoMeshes(medida, v) {
+    for (i = 0; i < meshConfigs.meshes.length; i++) {
+        if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+            meshConfigs.meshes[i][`t${medida}`] = Math.round((meshConfigs.meshes[i][`t${medida}`] + v) * 10) / 10
+            window[`spant${medida}`].innerHTML = `${medida}: ${meshConfigs.meshes[i][`t${medida}`]}%`
+            break
+        }
+    }
+    recarregarMedidas()
+}
+function editarTamanhoMeshes(medida, v) {
+    for (i = 0; i < meshConfigs.meshes.length; i++) {
+        if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+            meshConfigs.meshes[i][medida] += v
+            window[`span${medida}`].innerHTML = `W: ${meshConfigs.meshes[i][medida]}%`
+            editarTranslacaoMeshes('X', (v/2)*-1)
+            editarTranslacaoMeshes('Z', (v/2)*-1)
+            break
+        }
+    }
+    recarregarMedidas()
+}
+function realmenteAlterarEixoDoMesh() {
+    for (i = 0; i < meshConfigs.meshes.length; i++) {
+        if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+            console.log(meshConfigs.meshes[i].grupoFk)
+            break
+        }
+    }
+}
+
 function animarGrupo() {
     alert("Ainda em desenvolvimento")
 }
 
-function excluirConfirmacao() {
+
+function excluirConfirmacao(item) {
     clearTimeout(meshConfigs.timeouts.exclusaoCod)
-    botaoDeletar.innerHTML = "Tem certeza?"
-    botaoDeletar.onclick = excluirGrupoAtual
+    if (item) {
+        botaoDeletar.innerHTML = "Tem certeza? Isso inclui seus planos"
+        botaoDeletar.onclick = excluirGrupoAtual
+    } else {
+        botaoDeletar.innerHTML = "Tem certeza?"
+        botaoDeletar.onclick = excluirMeshAtual
+    }
 
     const reaparecer = setTimeout(() => {
         botaoDeletar.innerHTML = "Excluir eixo selecionado"
@@ -202,6 +256,18 @@ function excluirGrupoAtual() {
             meshConfigs.grupos.splice(meshConfigs.grupos.indexOf(meshConfigs.grupos[i]), 1)
             selecionarGrupo("na")
             atualizarListaGrupos()
+            recarregarMedidas()
+            break
+        }
+    }
+}
+function excluirMeshAtual() {
+    clearTimeout(meshConfigs.timeouts.exclusaoCod)
+    for (i = 0; i < meshConfigs.meshes.length; i++) {
+        if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
+            meshConfigs.meshes.splice(meshConfigs.meshes.indexOf(meshConfigs.meshes[i]), 1)
+            selecionarMesh("na")
+            atualizarListaMeshes()
             recarregarMedidas()
             break
         }

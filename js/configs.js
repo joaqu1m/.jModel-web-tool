@@ -3,10 +3,10 @@ let cameraConfigs = {
     eventoEmUso: false,
     cameraPos: {x: 0, y: 0},
     posicaoAnterior: {x: 0, y: 0}
-}
+},
 
 // Modelos e GUI
-let meshConfigs = {
+meshConfigs = {
     grupos: [],
     meshes: [],
     grupoSelecionado: "",

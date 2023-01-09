@@ -19,7 +19,7 @@ function atualizarListaMeshes() {
     if (!(meshConfigs.grupoSelecionado == "") && meshesAtuais.length > 0) {
         meshesLista.innerHTML = `<div onclick="selecionarMesh('na')" class="grdMiniCaixas"><b style="color: rgb(185, 37, 11);">Remover seleção</b></div>`
         for (i = 0; i < meshesAtuais.length; i++) {
-            meshesLista.innerHTML += `<div id="grdMeshesBotao${meshesAtuais[i].id}" class="grdMiniCaixas" onclick="selecionarMesh(${meshesAtuais[i].id})"><b>${meshesAtuais[i].nome}</b><span>${meshesAtuais[i].tipo} ID ${meshesAtuais[i].id}</span></div>`
+            meshesLista.innerHTML += `<div id="grdMeshesBotao${meshesAtuais[i].id}" class="grdMiniCaixas" onclick="selecionarMesh(${meshesAtuais[i].id})"><b style="color: ${meshesAtuais[i].cor}; background-color: ${inverterCor(meshesAtuais[i].cor)};">${meshesAtuais[i].nome}</b><span>${meshesAtuais[i].tipo} ID ${meshesAtuais[i].id}</span></div>`
         }
     } else {
         meshesLista.innerHTML = "Lista de formas do eixo selecionado vazia"
@@ -81,11 +81,24 @@ function aparecerTelaEdicao() {
     let medidas = ["X", "Y", "Z"]
     if (meshConfigs.meshSelecionada == "") {
         if (meshConfigs.grupoSelecionado == "") {
+            // Nada selecionado
             grdEditarMeshes.innerHTML +=
             `
-            <div class="grdMiniCaixas">criar eixo</div>
+            <div class="grdMiniCaixas">Manual de instruções</div>
+            <div class="grdMiniCaixas" onclick="criarGrupo()">Criar eixo</div>
             `
         } else {
+            grdEditarMeshes.innerHTML +=
+            // Eixo selecionado
+            `
+            <div class="grdMiniCaixas" onclick="criarPlano()">Criar novo plano neste eixo</div>
+            <div class="grdMiniCaixas grdMiniCaixasMeshesR">
+                <div style="flex-direction: column; width: 90%;">
+                    <b>Nome</b>
+                    <input id="inputnome" type="text" style="width: 80%; height: 20%; border: 1px solid black;" placeholder="Insira aqui" onkeyup="definirValor('grupos', 'nome', inputnome.value)" value="${meshConfigs.grupoSelecionado.nome}">
+                </div>
+            </div>
+            `
             for (i = 0; i < 3; i++) {
                 let medidaAtual = medidas[i]
                 grdEditarMeshes.innerHTML +=
@@ -127,7 +140,7 @@ function aparecerTelaEdicao() {
                         <button onclick="editarTranslacaoGrupos('${medidaAtual}', 1)">1</button>
                         <button onclick="editarTranslacaoGrupos('${medidaAtual}', 0.1)">0.1</button>
                     </div>
-                    <span id="spant${medidaAtual}">${medidaAtual}: 0%</span>
+                    <span id="spant${medidaAtual}">${medidaAtual}: ${meshConfigs.grupoSelecionado[`t${medidaAtual}`]}%</span>
                     <div>
                         <button onclick="editarTranslacaoGrupos('${medidaAtual}', -25)">25</button>
                         <button onclick="editarTranslacaoGrupos('${medidaAtual}', -10)">10</button>
@@ -152,24 +165,136 @@ function aparecerTelaEdicao() {
               <option value="315"></option>
               <option value="360"></option>
             </datalist>
-            <div class="grdMiniCaixas" onclick="criarPlano()">Criar novo plano neste eixo</div>
-            <div class="grdMiniCaixas" id="botaoDeletar" onclick="excluirConfirmacao()">Excluir eixo selecionado</div>
+            <div class="grdMiniCaixas" id="botaoDeletar" onclick="excluirConfirmacao(true)">Excluir eixo selecionado</div>
             <div class="grdMiniCaixas" onclick="animarGrupo()">Animar eixo selecionado</div>
             `
         }
     }
     else {
+        let listaGruposDisponiveis = []
+        for (i = 0; i < meshConfigs.grupos.length; i++) {
+            let grupoAtual = meshConfigs.grupos[i].id
+            if (grupoAtual == meshConfigs.meshSelecionada.grupoFk) {
+                listaGruposDisponiveis +=
+                `
+                <option selected="selected" value="${grupoAtual}">Eixo ${grupoAtual}</option>
+                `
+            } else {
+                listaGruposDisponiveis +=
+                `
+                <option value="${grupoAtual}">Eixo ${grupoAtual}</option>
+                `
+            }
+        }
         grdEditarMeshes.innerHTML +=
         `
-        <div class="grdMiniCaixas" style="flex-direction: unset;">
-            <div></div>
-            <input type="color" id="inputcolor" value="${meshConfigs.meshSelecionada.cor}">
+        <div class="grdMiniCaixas grdMiniCaixasMeshesR">
+            <div style="flex-direction: column; width: 90%;">
+                <b>Nome</b>
+                <input id="inputnome" type="text" style="width: 80%; height: 20%; border: 1px solid black;" placeholder="Insira aqui" onkeyup="definirValor('meshes', 'nome', inputnome.value)" value="${meshConfigs.meshSelecionada.nome}">
+                <b>Cor</b>
+                <input type="color" id="inputcolor" value="${meshConfigs.meshSelecionada.cor}" style="width: 85%; height: 25%;" oninput="definirValor('meshes', 'cor', inputcolor.value)">
+                <b>Eixo</b>
+                <select style="height: 20%;">
+                    ${listaGruposDisponiveis}
+                </select>
+            </div>
         </div>
         `
-        grdEditarMeshes.innerHTML += "editar modelo <br>"
-        grdEditarMeshes.innerHTML += "texturizar modelo <br>"
-        grdEditarMeshes.innerHTML += "deletar modelo"
-        // aparecer para mesh
+        for (i = 0; i < 2; i++) {
+            if (i % 2 == 0) {
+                grdEditarMeshes.innerHTML +=
+                `
+                <div class="grdMiniCaixas grdMiniCaixasMeshesT">
+                    <div>
+                        <button onclick="editarTamanhoMeshes('width', 25)">25</button>
+                        <button onclick="editarTamanhoMeshes('width', 10)">10</button>
+                    </div>
+                    <div>
+                        <button onclick="editarTamanhoMeshes('width', 1)">1</button>
+                        <button onclick="editarTamanhoMeshes('width', 0.1)">0.1</button>
+                    </div>
+                    <span id="spanwidth">W: ${meshConfigs.meshSelecionada["width"]}%</span>
+                    <div>
+                        <button onclick="editarTamanhoMeshes('width', -25)">25</button>
+                        <button onclick="editarTamanhoMeshes('width', -10)">10</button>
+                    </div>
+                    <div>
+                        <button onclick="editarTamanhoMeshes('width', -1)">1</button>
+                        <button onclick="editarTamanhoMeshes('width', -0.1)">0.1</button>
+                    </div>
+                </div>
+                `
+            }
+        }
+        for (i = 0; i < 3; i++) {
+            let medidaAtual = medidas[i]
+            grdEditarMeshes.innerHTML +=
+            `
+            <div class="grdMiniCaixas grdMiniCaixasMeshesR">
+                <div style="flex-direction: column; width: 90%;">
+                    <div>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', 10)">10</button>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', 1)">1</button>
+                    </div>
+                    <div>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', 0.1)">0.1</button>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', 0.01)">0.01</button>
+                    </div>
+                    <span id="spanr${medidaAtual}">${medidaAtual}: ${meshConfigs.meshSelecionada[`r${medidaAtual}`]}°</span>
+                    <div>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', -10)">10</button>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', -1)">1</button>
+                    </div>
+                    <div>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', -0.1)">0.1</button>
+                        <button onclick="editarMedidasMeshes('${medidaAtual}', -0.01)">0.01</button>
+                    </div>
+                </div>
+                <input oninput="editarMedidasMeshes('${medidaAtual}', '')" type="range" id="inputr${medidaAtual}" min="0" max="360" value="${meshConfigs.meshSelecionada[`r${medidaAtual}`]}" step="any" list="graus" orient="vertical" style="-webkit-appearance: slider-vertical;">
+            </div>
+            `
+        }
+        for (i = 0; i < 3; i++) {
+            let medidaAtual = medidas[i]
+            grdEditarMeshes.innerHTML +=
+            `
+            <div class="grdMiniCaixas grdMiniCaixasMeshesT">
+                <div>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', 25)">25</button>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', 10)">10</button>
+                </div>
+                <div>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', 1)">1</button>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', 0.1)">0.1</button>
+                </div>
+                <span id="spant${medidaAtual}">${medidaAtual}: ${meshConfigs.meshSelecionada[`t${medidaAtual}`]}%</span>
+                <div>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', -25)">25</button>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', -10)">10</button>
+                </div>
+                <div>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', -1)">1</button>
+                    <button onclick="editarTranslacaoMeshes('${medidaAtual}', -0.1)">0.1</button>
+                </div>
+            </div>
+            `
+        }
+        grdEditarMeshes.innerHTML +=
+        `
+        <datalist id="graus">
+          <option value="0"></option>
+          <option value="45"></option>
+          <option value="90"></option>
+          <option value="135"></option>
+          <option value="180"></option>
+          <option value="225"></option>
+          <option value="270"></option>
+          <option value="315"></option>
+          <option value="360"></option>
+        </datalist>
+        <div class="grdMiniCaixas" id="botaoDeletar" onclick="excluirConfirmacao(false)">Excluir plano selecionado</div>
+        `
     }
 }
 
@@ -198,7 +323,6 @@ function selecionarGrupo(g) {
     aparecerTelaEdicao()
 
 }
-
 function selecionarMesh(m) {
     if (meshConfigs.meshSelecionada == m) {
         return
@@ -221,4 +345,119 @@ function selecionarMesh(m) {
     }
     atualizarInfos()
     aparecerTelaEdicao()
+}
+
+function criarGrupo() {
+    grdEditarMeshes.innerHTML =
+    `
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            <input id="criarGruponome" type="text" placeholder="Nome">
+        </div>
+    </div>
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            Rotação
+        </div>
+        <div>
+            <span>X: </span>
+            <input id="criarGruporX" type="text">
+            <span>°</span>
+        </div>
+        <div>
+            <span>Y: </span>
+            <input id="criarGruporY" type="text">
+            <span>°</span>
+        </div>
+        <div>
+            <span>Z: </span>
+            <input id="criarGruporZ" type="text">
+            <span>°</span>
+        </div>
+    </div>
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            Translação
+        </div>
+        <div>
+            <span>X: </span>
+            <input id="criarGrupotX" type="text">
+            <span>%</span>
+        </div>
+        <div>
+            <span>Y: </span>
+            <input id="criarGrupotY" type="text">
+            <span>%</span>
+        </div>
+        <div>
+            <span>Z: </span>
+            <input id="criarGrupotZ" type="text">
+            <span>%</span>
+        </div>
+    </div>
+    <div class="grdMiniCaixas" onclick="realmenteCriarGrupo()">Confirmar</div>
+    <div class="grdMiniCaixas" onclick="aparecerTelaEdicao()">Cancelar</div>
+    `
+}
+
+function criarPlano() {
+    grdEditarMeshes.innerHTML =
+    `
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            <input id="criarPlanonome" type="text" placeholder="Nome">
+        </div>
+        <div>
+            <input id="criarPlanowidth" type="text" placeholder="Width%">
+        </div>
+        <div>
+            <input id="criarPlanoheight" type="text" placeholder="Height%">
+        </div>
+        <div>
+            <input id="criarPlanocor" type="color" style="padding: 0; margin: 0; border: 0; background-color: transparent; width: 70%;" value="#bcffb8">
+        </div>
+    </div>
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            Rotação
+        </div>
+        <div>
+            <span>X: </span>
+            <input id="criarPlanorX" type="text">
+            <span>°</span>
+        </div>
+        <div>
+            <span>Y: </span>
+            <input id="criarPlanorY" type="text">
+            <span>°</span>
+        </div>
+        <div>
+            <span>Z: </span>
+            <input id="criarPlanorZ" type="text">
+            <span>°</span>
+        </div>
+    </div>
+    <div class="grdMiniCaixas grdMiniCaixasCriarR">
+        <div>
+            Translação
+        </div>
+        <div>
+            <span>X: </span>
+            <input id="criarPlanotX" type="text">
+            <span>%</span>
+        </div>
+        <div>
+            <span>Y: </span>
+            <input id="criarPlanotY" type="text">
+            <span>%</span>
+        </div>
+        <div>
+            <span>Z: </span>
+            <input id="criarPlanotZ" type="text">
+            <span>%</span>
+        </div>
+    </div>
+    <div class="grdMiniCaixas" onclick="realmenteCriarPlano()">Confirmar</div>
+    <div class="grdMiniCaixas" onclick="aparecerTelaEdicao()">Cancelar</div>
+    `
 }
