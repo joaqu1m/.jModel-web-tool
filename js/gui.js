@@ -202,30 +202,29 @@ function aparecerTelaEdicao() {
         </div>
         `
         for (i = 0; i < 2; i++) {
-            if (i % 2 == 0) {
-                grdEditarMeshes.innerHTML +=
-                `
-                <div class="grdMiniCaixas grdMiniCaixasMeshesT">
-                    <div>
-                        <button onclick="editarTamanhoMeshes('width', 25)">25</button>
-                        <button onclick="editarTamanhoMeshes('width', 10)">10</button>
-                    </div>
-                    <div>
-                        <button onclick="editarTamanhoMeshes('width', 1)">1</button>
-                        <button onclick="editarTamanhoMeshes('width', 0.1)">0.1</button>
-                    </div>
-                    <span id="spanwidth">W: ${meshConfigs.meshSelecionada["width"]}%</span>
-                    <div>
-                        <button onclick="editarTamanhoMeshes('width', -25)">25</button>
-                        <button onclick="editarTamanhoMeshes('width', -10)">10</button>
-                    </div>
-                    <div>
-                        <button onclick="editarTamanhoMeshes('width', -1)">1</button>
-                        <button onclick="editarTamanhoMeshes('width', -0.1)">0.1</button>
-                    </div>
+            let medidaAlterarTamanho = i % 2 == 0 ? "width" : "height"
+            grdEditarMeshes.innerHTML +=
+            `
+            <div class="grdMiniCaixas grdMiniCaixasMeshesT">
+                <div>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', 25)">25</button>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', 10)">10</button>
                 </div>
-                `
-            }
+                <div>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', 1)">1</button>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', 0.1)">0.1</button>
+                </div>
+                <span id="span${medidaAlterarTamanho}">${medidaAlterarTamanho[0].toUpperCase()}: ${meshConfigs.meshSelecionada[medidaAlterarTamanho]}%</span>
+                <div>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', -25)">25</button>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', -10)">10</button>
+                </div>
+                <div>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', -1)">1</button>
+                    <button onclick="editarTamanhoMeshes('${medidaAlterarTamanho}', -0.1)">0.1</button>
+                </div>
+            </div>
+            `
         }
         for (i = 0; i < 3; i++) {
             let medidaAtual = medidas[i]
@@ -361,17 +360,17 @@ function criarGrupo() {
         </div>
         <div>
             <span>X: </span>
-            <input id="criarGruporX" type="text">
+            <input id="criarGruporX" type="text" placeholder="0">
             <span>°</span>
         </div>
         <div>
             <span>Y: </span>
-            <input id="criarGruporY" type="text">
+            <input id="criarGruporY" type="text" placeholder="0">
             <span>°</span>
         </div>
         <div>
             <span>Z: </span>
-            <input id="criarGruporZ" type="text">
+            <input id="criarGruporZ" type="text" placeholder="0">
             <span>°</span>
         </div>
     </div>
@@ -381,17 +380,17 @@ function criarGrupo() {
         </div>
         <div>
             <span>X: </span>
-            <input id="criarGrupotX" type="text">
+            <input id="criarGrupotX" type="text" placeholder="0">
             <span>%</span>
         </div>
         <div>
             <span>Y: </span>
-            <input id="criarGrupotY" type="text">
+            <input id="criarGrupotY" type="text" placeholder="0">
             <span>%</span>
         </div>
         <div>
             <span>Z: </span>
-            <input id="criarGrupotZ" type="text">
+            <input id="criarGrupotZ" type="text" placeholder="0">
             <span>%</span>
         </div>
     </div>
@@ -423,17 +422,17 @@ function criarPlano() {
         </div>
         <div>
             <span>X: </span>
-            <input id="criarPlanorX" type="text">
+            <input id="criarPlanorX" type="text" placeholder="0">
             <span>°</span>
         </div>
         <div>
             <span>Y: </span>
-            <input id="criarPlanorY" type="text">
+            <input id="criarPlanorY" type="text" placeholder="0">
             <span>°</span>
         </div>
         <div>
             <span>Z: </span>
-            <input id="criarPlanorZ" type="text">
+            <input id="criarPlanorZ" type="text" placeholder="0">
             <span>°</span>
         </div>
     </div>
@@ -443,17 +442,17 @@ function criarPlano() {
         </div>
         <div>
             <span>X: </span>
-            <input id="criarPlanotX" type="text">
+            <input id="criarPlanotX" type="text" placeholder="0">
             <span>%</span>
         </div>
         <div>
             <span>Y: </span>
-            <input id="criarPlanotY" type="text">
+            <input id="criarPlanotY" type="text" placeholder="0">
             <span>%</span>
         </div>
         <div>
             <span>Z: </span>
-            <input id="criarPlanotZ" type="text">
+            <input id="criarPlanotZ" type="text" placeholder="0">
             <span>%</span>
         </div>
     </div>

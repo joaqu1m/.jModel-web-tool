@@ -49,7 +49,7 @@ meshConfigs.meshes.push({
     rY: 90,
     rZ: 0,
     tX: 0,
-    tY: 0,
+    tY: -12.5,
     tZ: 50,
     cor: "#329a1d",
     grupoFk: 1,

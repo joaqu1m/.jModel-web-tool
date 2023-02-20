@@ -205,9 +205,7 @@ function editarTamanhoMeshes(medida, v) {
     for (i = 0; i < meshConfigs.meshes.length; i++) {
         if (meshConfigs.meshes[i].id == meshConfigs.meshSelecionada.id) {
             meshConfigs.meshes[i][medida] += v
-            window[`span${medida}`].innerHTML = `W: ${meshConfigs.meshes[i][medida]}%`
-            editarTranslacaoMeshes('X', (v/2)*-1)
-            editarTranslacaoMeshes('Z', (v/2)*-1)
+            window[`span${medida}`].innerHTML = `${medida[0].toUpperCase()}: ${meshConfigs.meshes[i][medida]}%`
             break
         }
     }

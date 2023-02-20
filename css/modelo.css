@@ -9,8 +9,8 @@
     overflow: hidden;
 }
 #visPelicula {
-    width: 500px;
-    height: 500px;
+    width: 75vh;
+    height: 75vh;
     position: absolute;
     z-index: 1;
     cursor: move;
@@ -50,6 +50,9 @@
     height: 100%;
     transform-style: preserve-3d;
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .absoluto {
     position: absolute;
