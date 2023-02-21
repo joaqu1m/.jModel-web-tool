@@ -28,10 +28,7 @@
             </div>
         </div>
         <div>
-            <div id="cameraLista" class="grdCaixaHorizontal">
-                informações gerais e utilidades, infos da câmera e itens selecionados atualmente <br>
-                <button onclick="recarregarMedidas()">desativar modo de ajuda</button>
-            </div>
+            <div id="mainLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
             <div id="grdEditarMeshes" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
             <div id="gruposLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
             <div id="meshesLista" class="grdCaixaHorizontal grdCaixaHorizontalScrollbar"></div>
@@ -84,12 +81,18 @@
     ===========================
     */
 
+    // Verificando se há um modelo salvo no navegador
+    if (!(localStorage.modelo == undefined || localStorage.modelo == "" || localStorage.modelo == null)) {
+        importandoModelo(localStorage.modelo)
+    }
+
     // Câmera
     redefinirCamera()
 
     // GUI
     atualizarListaGrupos()
     atualizarListaMeshes()
+    atualizarListaMain()
     atualizarInfos()
     aparecerTelaEdicao()
 </script>

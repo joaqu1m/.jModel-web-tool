@@ -26,6 +26,48 @@ function atualizarListaMeshes() {
     }
 }
 
+function atualizarListaMain() {
+    mainLista.innerHTML =
+    `
+    <div class="grdMiniCaixas grdMiniCaixasMeshesR">
+        <div style="flex-direction: column; width: 90%;">
+            <span>Câmera</span>
+            <br>
+            <span>X ${cameraConfigs.cameraPos.x}°</span>
+            <span>Y ${cameraConfigs.cameraPos.y}°</span>
+            <span>Zoom: ${visGrupos.offsetWidth}px</span>
+        </div>
+    </div>
+    <div class="grdMiniCaixas grdMiniCaixasMeshesR">
+        <div style="flex-direction: column; width: 90%;">
+            <span>Carregar Modelo</span>
+            <br>
+            <input type="file" id="inputArquivoCarregarModelo" style="height:20%;width:80%">
+        </div>
+    </div>
+    <div class="grdMiniCaixas" onclick="salvarDownload()">Salvar Modelo</div>
+    <div class="grdMiniCaixas" onclick="alternarModoAjuda()" id="botaoAlternarModoAjuda">Modo de Ajuda <span style="color: green;">Ativado</span></div>
+    <div class="grdMiniCaixas" onclick="alternarSalvamentoLocal()" id="botaoAlternarSalvamentoLocal">Salvamento Local no Browser <span style="color: green;">Ativado</span></div>
+    <div class="grdMiniCaixas" onclick="deletarModelo()">Deletar Modelo</div>
+    `
+    inputArquivoCarregarModelo.onchange = function(e) {
+        const fileList = this.files
+        lerArquivo(fileList[0])
+    }
+    function lerArquivo(file) {
+        if (file.name.indexOf(".jModel") > -1) {
+            leitor1.readAsText(file)
+        } else {
+            alert("Tipo inválido")
+        }
+    }
+    const leitor1 = new FileReader()
+    leitor1.addEventListener('load', (event) => {
+        deletarModelo()
+        importandoModelo(event.target.result)
+    })
+}
+
 function atualizarInfos() {
     if (meshConfigs.meshSelecionada == "") {
         if (meshConfigs.grupoSelecionado == "") {
@@ -84,7 +126,7 @@ function aparecerTelaEdicao() {
             // Nada selecionado
             grdEditarMeshes.innerHTML +=
             `
-            <div class="grdMiniCaixas">Manual de instruções</div>
+            <div class="grdMiniCaixas" onclick="abrirManualDeInstrucoes()">Manual de instruções</div>
             <div class="grdMiniCaixas" onclick="criarGrupo()">Criar eixo</div>
             `
         } else {
@@ -459,4 +501,8 @@ function criarPlano() {
     <div class="grdMiniCaixas" onclick="realmenteCriarPlano()">Confirmar</div>
     <div class="grdMiniCaixas" onclick="aparecerTelaEdicao()">Cancelar</div>
     `
+}
+
+function abrirManualDeInstrucoes() {
+    alert("Ainda em desenvolvimento")
 }

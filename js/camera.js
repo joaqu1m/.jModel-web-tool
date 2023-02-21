@@ -4,10 +4,12 @@ function redefinirCamera() {
     visGrupos.style.width = "150px"
     visGrupos.style.height = "150px"
     recarregarMedidas()
+    atualizarListaMain()
 }
 
 function definirCamera() {
     visGrupos.style.transform = `rotateX(${cameraConfigs.cameraPos.x}deg) rotateY(${cameraConfigs.cameraPos.y}deg)`
+    atualizarListaMain()
 }
 
 function mouseMovendo(e) {
@@ -57,4 +59,5 @@ function zoomCamera(mais) {
         visGrupos.style.height = `${visGrupos.offsetHeight - 25}px`
     }
     recarregarMedidas()
+    atualizarListaMain()
 }

@@ -15,8 +15,9 @@ function recarregarMedidas() {
         }
         window[`grupo${meshConfigs.grupos[i].id}`].innerHTML += `<div id="grupoPlanos${meshConfigs.grupos[i].id}" class="grupoPlanos"></div>`
     }
+    let classesAjuda = meshConfigs.mostrarAjudas ? "absoluto" : "absoluto backfaceOn"
     for (i = 0; i < meshConfigs.meshes.length; i++) {
-        window[`grupoPlanos${meshConfigs.meshes[i].grupoFk}`].innerHTML += `<div id="face${meshConfigs.meshes[i].id}" class="absoluto"></div>`
+        window[`grupoPlanos${meshConfigs.meshes[i].grupoFk}`].innerHTML += `<div id="face${meshConfigs.meshes[i].id}" class="${classesAjuda}"></div>`
     }
 
     // Depois ele carrega as medidas dos grupos e faces
@@ -34,6 +35,9 @@ function recarregarMedidas() {
         mesh.backgroundColor = m.cor
     }
     atualizarInfos()
+    if (meshConfigs.salvamentoLocal) {
+        salvarLocalmente()
+    }
 }
 
 function realmenteCriarGrupo() {
@@ -113,6 +117,10 @@ function realmenteCriarPlano() {
 }
 
 function definirValor(categoria, item, fonte) {
+    if (item == "nome" && fonte.indexOf(" ") > -1) {
+        alert("Tente não colocar espaços no nome")
+        fonte = trocarCaractere(fonte, " ", "")
+    }
     if (categoria == "grupos") {
         for (i = 0; i < meshConfigs.grupos.length; i++) {
             if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
@@ -270,4 +278,97 @@ function excluirMeshAtual() {
             break
         }
     }
+}
+function alternarModoAjuda() {
+    if (meshConfigs.mostrarAjudas) {
+        meshConfigs.mostrarAjudas = false
+        botaoAlternarModoAjuda.innerHTML = "Modo de Ajuda <span style='color: red;'>Desativado</span>"
+    } else {
+        meshConfigs.mostrarAjudas = true
+        botaoAlternarModoAjuda.innerHTML = "Modo de Ajuda <span style='color: green;'>Ativado</span>"
+    }
+    recarregarMedidas()
+}
+function alternarSalvamentoLocal() {
+    if (meshConfigs.salvamentoLocal) {
+        meshConfigs.salvamentoLocal = false
+        botaoAlternarSalvamentoLocal.innerHTML = "Salvamento Local no Browser <span style='color: red;'>Desativado</span>"
+    } else {
+        meshConfigs.salvamentoLocal = true
+        botaoAlternarSalvamentoLocal.innerHTML = "Salvamento Local no Browser <span style='color: green;'>Ativado</span>"
+    }
+}
+
+function salvarLocalmente() {
+    localStorage.modelo = incorporarModelo()
+}
+function salvarDownload() {
+    let filename = 'project.jModel'
+    var element = document.createElement('a')
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(incorporarModelo()))
+    element.setAttribute('download', filename)
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+}
+function incorporarModelo() {
+    let stringFinal = ""
+    for (i = 0; i < meshConfigs.grupos.length; i++) {
+        stringFinal += `${Object.values(meshConfigs.grupos[i])}|`
+    }
+    for (i = 0; i < meshConfigs.meshes.length; i++) {
+        stringFinal += `${Object.values(meshConfigs.meshes[i])}|`
+    }
+    return trocarCaractere(stringFinal, ",", " ").substring(0,stringFinal.length-1)
+}
+
+//Leitor de modelo
+function importandoModelo(string) {
+    let arrayBruto = separarEmArrays(string, "|")
+
+    for (i = 0; i < arrayBruto.length; i++) {
+        let sprd = separarEmArrays(arrayBruto[i], " ")
+        if (sprd.length == 8) {
+            meshConfigs.grupos.push({
+                id: Number(sprd[0]),
+                nome: sprd[1],
+                rX: Number(sprd[2]),
+                rY: Number(sprd[3]),
+                rZ: Number(sprd[4]),
+                tX: Number(sprd[5]),
+                tY: Number(sprd[6]),
+                tZ: Number(sprd[7])
+            })
+        } else {
+            meshConfigs.meshes.push({
+                id: Number(sprd[0]),
+                nome: sprd[1],
+                width: Number(sprd[2]),
+                height: Number(sprd[3]),
+                rX: Number(sprd[4]),
+                rY: Number(sprd[5]),
+                rZ: Number(sprd[6]),
+                tX: Number(sprd[7]),
+                tY: Number(sprd[8]),
+                tZ: Number(sprd[9]),
+                cor: sprd[10],
+                grupoFk: Number(sprd[11]),
+                tipo: sprd[12]
+            })
+        }
+    }
+    recarregarMedidas()
+    atualizarListaGrupos()
+    atualizarListaMeshes()
+}
+
+function deletarModelo() {
+    localStorage.removeItem("modelo")
+    meshConfigs.grupos = []
+    meshConfigs.meshes = []
+    meshConfigs.grupoSelecionado = ""
+    meshConfigs.meshSelecionada = ""
+    recarregarMedidas()
+    atualizarListaGrupos()
+    atualizarListaMeshes()
 }

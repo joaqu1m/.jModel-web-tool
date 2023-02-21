@@ -35,3 +35,26 @@ function inverterCor(hex) {
     }
     return `#${cdCor(hex.substring(0, 2))}${cdCor(hex.substring(2, 4))}${cdCor(hex.substring(4, 6))}`
 }
+function trocarCaractere(texto, charAtual, charIntencionado) {
+    novaString = texto
+    while (novaString.indexOf(charAtual) > -1) {
+        novaString = novaString.replace(charAtual, charIntencionado)
+    }
+    return novaString
+}
+function separarEmArrays(string, char) {
+    let separarEmArrayNovo = []
+    while(true) {
+        if (string.length > 0) {
+            if (string.indexOf(char) > -1) {
+                separarEmArrayNovo.push(string.substring(0, string.indexOf(char)))
+                string = string.substring(string.indexOf(char)+1)
+            } else {
+                separarEmArrayNovo.push(string)
+                string = ""
+            }
+        } else {
+            return separarEmArrayNovo
+        }
+    }
+}
