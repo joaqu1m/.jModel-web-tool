@@ -1,7 +1,6 @@
 animar modelo
 texturizar com imagem
 adicionar outras formas como texto e triangulo
-carregar modelos em seus projetos
 pdf guia
 conseguir alterar o eixo de um plano
-substituir espaços por ; no save
+n da pra dar ctrl c em hex

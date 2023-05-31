@@ -55,7 +55,7 @@ function atualizarListaMain() {
         lerArquivo(fileList[0])
     }
     function lerArquivo(file) {
-        if (file.name.indexOf(".jModel") > -1) {
+        if (file.name.indexOf(".html3d") > -1) {
             leitor1.readAsText(file)
         } else {
             alert("Tipo inválido")

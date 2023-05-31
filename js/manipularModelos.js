@@ -117,10 +117,6 @@ function realmenteCriarPlano() {
 }
 
 function definirValor(categoria, item, fonte) {
-    if (item == "nome" && fonte.indexOf(" ") > -1) {
-        alert("Tente não colocar espaços no nome")
-        fonte = trocarCaractere(fonte, " ", "")
-    }
     if (categoria == "grupos") {
         for (i = 0; i < meshConfigs.grupos.length; i++) {
             if (meshConfigs.grupos[i].id == meshConfigs.grupoSelecionado.id) {
@@ -303,7 +299,7 @@ function salvarLocalmente() {
     localStorage.modelo = incorporarModelo()
 }
 function salvarDownload() {
-    let filename = 'project.jModel'
+    let filename = 'project.html3d'
     var element = document.createElement('a')
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(incorporarModelo()))
     element.setAttribute('download', filename)
@@ -319,7 +315,7 @@ function incorporarModelo() {
     for (i = 0; i < meshConfigs.meshes.length; i++) {
         stringFinal += `${Object.values(meshConfigs.meshes[i])}|`
     }
-    return trocarCaractere(stringFinal, ",", " ").substring(0,stringFinal.length-1)
+    return trocarCaractere(stringFinal, ",", ";").substring(0,stringFinal.length-1)
 }
 
 //Leitor de modelo
@@ -327,7 +323,7 @@ function importandoModelo(string) {
     let arrayBruto = separarEmArrays(string, "|")
 
     for (i = 0; i < arrayBruto.length; i++) {
-        let sprd = separarEmArrays(arrayBruto[i], " ")
+        let sprd = separarEmArrays(arrayBruto[i], ";")
         if (sprd.length == 8) {
             meshConfigs.grupos.push({
                 id: Number(sprd[0]),
